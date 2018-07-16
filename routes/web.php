@@ -21,11 +21,16 @@ Route::get('/contact','PagesController@contact');
 
 Route::get('/contact','TicketsController@create');
 Route::post('/contact','TicketsController@store');
+
 Route::get('/tickets', 'TicketsController@index');
-Route::get('/ticket/{slug?}', 'TicketsController@show');
-Route::get('/ticket/{slug?}/edit','TicketsController@edit');
-Route::post('/ticket/{slug?}/edit','TicketsController@update');
-Route::post('/ticket/{slug?}/delete','TicketsController@destroy');
+
+Route::group(['prefix' => 'ticket'], function(){
+	Route::get('/{slug?}', 'TicketsController@show');
+	Route::get('/{slug?}/edit','TicketsController@edit');
+	Route::post('/{slug?}/edit','TicketsController@update');
+	Route::post('/{slug?}/delete','TicketsController@destroy');
+});
+
 Route::get('sendemail', function () {
 
     $data = array(
@@ -44,3 +49,19 @@ Route::get('sendemail', function () {
 
 });
 Route::post('/comment', 'CommentsController@newComment');
+
+Route::group(['prefix' => 'users', 'namespace' => 'Auth'], function(){
+	Route::get('register', 'RegisterController@showRegistrationForm');
+	Route::post('register', 'RegisterController@register');
+
+	Route::get('logout', 'LoginController@logout');
+
+	Route::get('login', 'LoginController@showLoginForm')->name('login');
+	Route::post('login', 'LoginController@login');
+});
+
+
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth')
+, function () {
+	Route::get('users', 'UsersController@index');
+});
