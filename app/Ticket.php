@@ -8,8 +8,14 @@ class Ticket extends Model
 {
 	// protected $fillable = ['title', 'content', 'slug', 'status', 'user_id'];
 	// protected $guarded = ['id'];
-	
-    protected $table='tickets';
-    protected $primaryKey='id';
-    protected $guarded=[];
+
+    // protected $table='tickets';
+    // protected $primaryKey='id';
+    // protected $guarded=[];
+    protected $guarded = ['id'];
+
+    public function comments()
+    {
+        return $this->hasMany('App\Comment', 'post_id');
+    }
 }
